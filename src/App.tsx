@@ -1,37 +1,36 @@
 import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-
-const client = generateClient<Schema>();
+import { fetchAuthSession  } from "@aws-amplify/auth";
 
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [groups, setGroups] = useState<string[]>([]);
 
   useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
+    const fetchGroups = async () => {
+      try {
+        const { tokens } = await fetchAuthSession();
+        const idToken = tokens?.idToken?.toString();
 
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
+        if (idToken) {
+          const { ["cognito:groups"]: userGroups = [] } = JSON.parse(atob(idToken.split(".")[1]));
+          setGroups(userGroups);
+        }
+      } catch (error) {
+        console.error("Error fetching user groups:", error);
+      }
+    };
+
+    fetchGroups();
+  }, []);
 
   return (
     <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
+      <h1>Displaying groups of users</h1>
+      <div>
       <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
+        {groups.map((group) => (
+          <li>{group}</li>
         ))}
       </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
       </div>
     </main>
   );
