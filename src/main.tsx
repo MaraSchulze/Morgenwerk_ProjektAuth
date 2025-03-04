@@ -4,21 +4,11 @@ import App from "./App.tsx";
 import "./index.css";
 import { Amplify } from "aws-amplify";
 import outputs from "../amplify_outputs.json";
-import { Authenticator } from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
 
 Amplify.configure(outputs);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Authenticator>
-      {({ signOut, user }) => (
-        <main>
-          <h1>Hello {user?.signInDetails?.loginId}</h1>
-          <App />
-          <button onClick={signOut}>Sign out</button>
-        </main>
-      )}
-      </Authenticator>
+    <App />
   </React.StrictMode>
 );
