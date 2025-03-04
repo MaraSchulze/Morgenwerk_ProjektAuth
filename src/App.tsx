@@ -29,10 +29,8 @@ function App() {
     <Authenticator>
       {({ signOut, user }) => (
         <main>
-          // Print the user name
           <h1>Hello {user?.signInDetails?.loginId}</h1>
         
-          // Print the groups of the user
           <div>
             <ul>
               {groups.map((group) => (
@@ -41,7 +39,6 @@ function App() {
             </ul>
           </div>
 
-          // Sign out button
           <button onClick={signOut}>Sign out</button>
         </main>
       )}
