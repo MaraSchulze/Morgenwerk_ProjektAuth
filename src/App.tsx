@@ -24,13 +24,12 @@ function App() {
 
   return (
     <main>
-      <h1>Displaying groups of users</h1>
       <div>
-      <ul>
-        {groups.map((group) => (
-          <li>{group}</li>
-        ))}
-      </ul>
+        <ul>
+          {groups.map((group) => (
+            <li>{group}</li>
+          ))}
+        </ul>
       </div>
     </main>
   );
